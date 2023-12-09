@@ -3,8 +3,13 @@ const app = express.Router();
 const playListModel = require(__dirname+'/../../Models/playList');
 const studentModel = require(__dirname+'/../../Models/StudentModel');
 const imageUpload = require(__dirname+'/../../middleware/uploadImage');
-const rolePermission = require(__dirname+'/../../middleware/PermissionCheck'); //middleware for session check
+const rolePermission = require(__dirname+'/../../middleware/PermissionCheck'); 
+
+const assignment_assign = require(__dirname+'/../../Models/assignment_assign.js');
+
+//middleware for session check
 const inArray = require('in-array'); 
+const multer = require('multer');
 
 
 // {_id:req.session.user._id}
@@ -54,6 +59,26 @@ const {name,mobile,email,password,assign_course,address} = req.body;
     res.render('admin/student/show_student',{student:student,playlist:playlist,inArray:inArray})
 
 })
+
+//my code start
+app.get('/view_student_overview/:id',async (req,res)=>{
+
+
+
+var user_id = req.params.id;
+//console.log("User ID is "+user_id);
+
+    var student_assignment_data = await assignment_assign.find({student_id:user_id}).populate('chapter_id');
+
+    console.log('hvjsvhsajvhsgdfgwy'+student_assignment_data);
+ 
+    res.render('admin/student/show_student_overview' , {data : student_assignment_data,inArray:inArray});
+})
+//my code end
+
+
+
+
 
 app.get('/status_student/:id/:num',rolePermission('statusStudent'), async(req,res)=>{
     const {id,num} = req.params;
@@ -112,6 +137,7 @@ app.post('/edit_student/:id',rolePermission('editStudent'),imageUpload.single('i
        })
 
 })
+
 
 
 

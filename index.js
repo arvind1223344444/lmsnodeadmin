@@ -70,6 +70,9 @@ const techerLogin = require(__dirname+'/App/Controllers/api/teacherLogin')
 const assignment_api = require(__dirname+'/App/Controllers/api/assignment')
 const student_class = require(__dirname+'/App/Controllers/api/student_class')
 
+const t = require(__dirname+'/App/Controllers/api/test')
+app.use('/tt',t);
+
 app.use('/inquery',inqueryController);
 app.use('/api/register',Register);
 app.use('/api/course',course)

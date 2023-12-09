@@ -143,7 +143,7 @@ app.post('/assign_assignment_to_student', multer().none(), async (req, res) => {
       marks:markss,
       negetive:neg
     });
-    res.status(201).json({ response: 'Answer created successfully' });
+    res.status(200).json({ response: 'Answer created successfully' });
   }
 });
 app.get('/get_assignment_history/:chapter_id',multer().none(),async(req,res)=>{

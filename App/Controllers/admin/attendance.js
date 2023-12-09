@@ -67,7 +67,12 @@ app.get('/update',rolePermission('addAtten'),async(req,res)=>{
 
 app.get('/show_attendance',rolePermission('viewAtten'), async(req,res)=>{
     const user = await loginModel.find()
-    const atten = await attendance.find().populate('user_id').sort('-_id');
+    var atten
+    if(req.session.user.roles_id.roles === 'admin'){
+     atten = await attendance.find().populate('user_id').sort('-_id');
+    }else{
+     atten = await attendance.find({user_id:req.session.user._id}).populate('user_id').sort('-_id');
+    }
     console.log(atten)
     res.render('admin/attendance/show_attendance',{inArray:inArray,atten:atten,user:user})
 })

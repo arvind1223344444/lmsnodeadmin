@@ -4,9 +4,19 @@ const app = express.Router();
 const teacherModel =  require(__dirname+'./../../Models/TeacherModel');
 const playModel =  require(__dirname+'./../../Models/playList');
 const chapter_view =  require(__dirname+'./../../Models/chapter');
+
+
+const student_attendance = require(__dirname+'./../../Models/student_attendance');
+
+
 const assignmentModel = require(__dirname+'/../../Models/assignment');
 const assign_question_Model = require(__dirname+'/../../Models/assignment_question');
 const assign_task = require(__dirname+'/../../Models/assignment_assign');
+const payment_done = require(__dirname+'/../../Models/payment_done');
+
+
+
+
 const assign_answer = require(__dirname+'/../../Models/assignment_answer');
 const student_present = require(__dirname+'/../../Models/student_present');
 const student = require(__dirname+'/../../Models/StudentModel');
@@ -60,6 +70,146 @@ app.get('/course_enroll_student/:teacher_id', multer().none(), async(req,res)=>{
   console.log(err.message)
   })
 })
+
+
+app.get('/teacher_class_notification/:teacher_id', multer().none(), async (req, res) => {
+  const { teacher_id } = req.params; 
+  try {
+    const teacherData = await teacherModel.findOne({ _id: teacher_id }).populate({ path: 'assign_course' });
+    const response = teacherData.toObject();
+    const total_assign_courses = response.assign_course;
+
+    for (const course of total_assign_courses) {
+      const course_id = course._id;
+      const chapterData = await chapter_view.find({ playlist_id: course_id });
+      
+      const chapterNames = chapterData.map(chapter => chapter); // Extracting chapter names
+      
+      course.chapter_names = chapterNames; // Adding chapter names to the course object
+    }
+
+    res.status(200).json({ response: response });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+ // Added the closing bracket for the route definition
+
+
+app.get('/teacher_assign_courses/:teacher_id', multer().none(), async(req,res)=>{
+  const { teacher_id } = req.params; 
+  teacherModel.findOne({ _id: teacher_id }).populate({path:'assign_course' ,populate:{path:'student'}}).then((data)=>{
+   const response =  data.toObject();
+   console.log(response)
+  res.status(200).json({ response: response })
+  }).catch((err)=>{
+  console.log(err.message)
+  })
+})
+
+
+
+
+
+app.get('/student_enroll_list/:course_id', multer().none(), async (req, res) => {
+  try {
+    const { course_id } = req.params;
+
+    // Find students enrolled in the specified course
+    const students = await student.find({ assign_course: course_id });
+
+    if (students.length === 0) {
+      return res.status(404).json({ error: 'No students enrolled in this course.' });
+    }
+
+    res.json({ students });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+// app.get('/present_student/:chapter_id',multer().none(),async(req, res)=>{
+
+//   try{
+
+//     const { chapter_id }= req.params;
+    
+//     const presentStudent = await student_attendance.find({playlist_id:chapter_id});
+//    // console.log(presentStudent.student_id);
+   
+//    presentStudent.forEach(async (studentdata) => {
+//     // console.log(studentdata.playlist_id);
+  
+//     const playlist_id = studentdata.playlist_id;
+   
+//     try {
+//       const chapter_Details = await chapter_view.findOne({ _id: playlist_id }, 'chapter_name');
+//       const chapter_name = chapter_Details.chapter_name;
+
+//       //console.log(chapter_name);
+//     } catch (error) {
+//       console.error("Error:", error);
+//     }
+
+  
+//   });
+
+//     res.json({presentStudent})
+//   }
+//   catch(error){
+//     console.error("Error:", error);
+//     res.status(500).json({error:"Server Error"});
+//   }
+// })
+
+
+app.get('/present_student/:chapter_id', multer().none(), async (req, res) => {
+  try {
+    const { chapter_id } = req.params;
+    
+    let presentStudent = await student_attendance.find({ playlist_id: chapter_id });
+
+    const chapterDetailsPromises = presentStudent.map(async (studentdata) => {
+      const playlist_id = studentdata.playlist_id;
+      try {
+        const chapter_Details = await chapter_view.findOne({ _id: playlist_id }, 'chapter_name');
+        return chapter_Details ? chapter_Details.chapter_name : null;
+      } catch (error) {
+        console.error("Error fetching chapter name:", error);
+        return null;
+      }
+    });
+
+
+    
+
+    const chapterDetails = await Promise.all(chapterDetailsPromises);
+
+    presentStudent = presentStudent.map((studentdata, index) => ({
+      ...studentdata.toObject(),
+      chapter_name: chapterDetails[index]
+    }));
+
+    res.json({ presentStudent });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
+
+
+
+
+
+
+
+
 
 app.get('/get_chapter_details/:chapter_id', multer().none(), async(req,res)=>{
   const { chapter_id, } = req.params; 
@@ -139,7 +289,7 @@ app.get('/view_all_assignment_allquestion/:assign_id',multer().none(), (req,res)
 //    }).catch((err)=>{
 //       res.send(err)
 //    }) 
-// })
+// })  
 
 app.get('/get_all_student/:chapter_id',multer().none(),(req,res)=>{
 
@@ -235,6 +385,264 @@ app.get('/get_playlist/:student_id', multer().none(), async (req, res) => {
      res.send(err)
    }) 
    })
+
+
+
+
+
+//mycode start
+
+// app.get('/get_student_attendance/:student_id/:chapter_id?',multer().none(),async(req,res)=>{
+//   const { student_id,chapter_id } = req.params;
+//   let data=''
+//   let response=''
+
+//   const data34ss24 = await student_attendance.find({ playlist_id: chapter_id,student_id:student_id })
+ 
+//    response = data34ss24.toObject();
+
+// });
+
+
+// app.get('/get_student_attendance/:student_id?/:chapter_id?', multer().none(), async (req, res) => {
+
+
+
+
+
+// app.get('/get_payment_details/:student_id',multer().none(),async (req, res)=>{
+// const {student_id} = req.params;
+
+// try {
+//   const payment_data = await  payment_done.find({student_id:student_id});
+//   const response = payment_data.map(doc => doc.toObject());
+// }
+// catch (error) {
+//   // Handle any errors that occur during the execution of the query
+//   console.error(error);
+//   res.status(500).json({ error: 'Internal server error' });
+// }
+// });
+
+
+
+app.get('/get_payment_details/:student_id', multer().none(), async (req, res) => {
+  const { student_id } = req.params;     
+  try {
+    const data = await payment_done.find({ user_id: student_id });
+   const student_name = await student.findOne({_id:student_id});
+   //console.log(student_name.name);
+   std_name = student_name.name;
+    // Array to store promises for fetching playlist names
+    const promises = data.map(item => {
+      return playModel.findOne({ _id: item.playlist_id }).then((detail) => {
+        if (detail) {
+          return detail.playlist;
+        }
+        return null;
+      });
+    });
+
+    // Wait for all promises to resolve
+    const playlistNames = await Promise.all(promises);
+
+    // Combine data with playlist names
+    const response = data.map((item, index) => {
+      return {
+        ...item.toJSON(),
+        playlist_name: playlistNames[index],
+        student_name :std_name
+      };
+    });
+
+    // Send the response
+    res.status(200).send({ response: response });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+
+app.get('/get_chapter_name/:chapter_id', multer().none(), async (req, res) => {
+  const { chapter_id } = req.params;     
+  chapter_view.findOne({ _id: chapter_id },'chapter_name').then((data)=>{
+  console.log(data);
+  const response = data;
+  res.status(200).send({response : response})
+}).catch((err)=>{
+  res.send(err)
+}) 
+});
+
+
+app.get('/get_course_name/:course_id',multer().none(),async(req, res)=>{
+const {course_id} = req.params;
+playModel.findOne({_id: course_id} , "playlist").then((data)=>{
+  console.log(data);
+  const response = data;
+  res.status(200).send({response : response})
+}).catch((err)=>{
+  res.send(err)
+}) 
+
+})
+
+
+
+
+
+
+app.get('/student_attendance_for_profile/:student_id', multer().none(), async (req, res) => {
+  const {student_id} = req.params;
+
+  try {
+    // Use find() to get all matching documents
+
+
+
+      const student_name = await  student.findOne({ _id: student_id }, 'name');    
+      
+      const data34ss24 = await student_attendance.find({ student_id:student_id});
+      
+
+     // console.log();
+    // Check if data34ss24 is not empty
+    if (data34ss24.length > 0) {
+      // Convert the array of documents to plain JavaScript objects
+      const response = data34ss24.map(doc => doc.toObject());
+      //const playlistIds = response.map(item => item.playlist_id);
+
+      const playlistIds = response.map(item => item.playlist_id);
+  
+
+      const playlistsIds = await playModel.find({ _id: playlistIds }, 'playlist_id');
+      
+      const playlists = await chapter_view.find({ _id: playlistIds }, 'chapter_name');
+      async function processData(response) {
+        for (const item of response) {
+            const playlyst_id = item.playlist_id;
+            const course_iid = item.course_id
+   // console.log(item.course_id);
+            try {
+
+              const cour_name = await  playModel.findOne({_id: course_iid}, 'playlist');
+                const playname = await chapter_view.findOne({_id: playlyst_id}, 'chapter_name');
+                console.log(playname);
+                item.student_name = student_name.name;
+                item.chapter_name = playname ? playname.chapter_name : null;
+
+                item.playlist_name = cour_name ? cour_name.playlist :null ;
+                // Handle any further processing here
+            } catch (error) {
+                console.error(error);
+                // Handle error if necessary
+            }
+        }
+    
+        // After processing all items in response, you can send the response
+        res.json(response);
+    }
+    
+    processData(response);
+    
+    } 
+    else
+     {
+      // Handle case where no documents are found
+      res.status(404).json({ error: 'No data found for the provided parameters' });
+    }
+
+  
+  
+  } catch (error) {
+    // Handle any errors that occur during the execution of the query
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+
+
+
+  app.get('/get_student_attendance/:student_id/:course_id', multer().none(), async (req, res) => {
+  const { course_id,student_id} = req.params;
+
+  try {
+    // Use find() to get all matching documents
+
+
+if(course_id!=null)
+    {
+
+      const student_name = await  student.findOne({ _id: student_id }, 'name');    
+      const playlist_name = await playModel.findOne({ _id:course_id}, 'playlist')
+      const data34ss24 = await student_attendance.find({ course_id: course_id , student_id:student_id});
+    
+    // Check if data34ss24 is not empty
+    if (data34ss24.length > 0) {
+      // Convert the array of documents to plain JavaScript objects
+      const response = data34ss24.map(doc => doc.toObject());
+      const playlistIds = response.map(item => item.playlist_id);
+      const playlistsIds = await playModel.find({ _id: { $in: playlistIds } }, 'playlist_id');
+      
+     
+      async function processData(response) {
+    try {
+        const processedResponse = []; // Array to store processed items
+
+        for (const item of response) {
+            const playlist_iid = item.playlist_id;
+            
+            try {
+                const playlists = await chapter_view.find({_id: playlist_iid}, 'chapter_name');
+                console.log(playlist_iid);
+
+                // Assuming playlists is an array of chapters
+                item.student_name = student_name.name;
+                item.playlist_name = playlist_name.playlist;
+                item.chapter_name = playlists.length > 0 ? playlists[0].chapter_name : null;
+
+                processedResponse.push(item); // Add processed item to the array
+            } catch (error) {
+                console.error(error);
+                // Handle error if necessary
+            }
+        }
+
+        // After processing all items in response, send the processed response
+        res.json(processedResponse);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+// Call processData function with response as parameter
+processData(response);
+
+    //  res.json(response);
+    } else {
+      // Handle case where no documents are found
+      res.status(404).json({ error: 'No data found for the provided parameters' });
+    }
+  
+  }
+  
+  } catch (error) {
+    // Handle any errors that occur during the execution of the query
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+//mycode end
+
+
+
+
+
    app.get('/get_all_report/:student_id/:chapter_id?/:type?',multer().none(),async(req,res)=>{
     const { student_id,chapter_id,type } = req.params;
     let data=''
@@ -292,3 +700,4 @@ app.get('/get_playlist/:student_id', multer().none(), async (req, res) => {
       res.status(200).send({response : response})
    })
    module.exports = app;
+

@@ -21,6 +21,23 @@ const fee = database.Schema({
         required:true
     },
 
+    amount:{
+        type:String,
+        required:true
+    },
+
+    discount_amount:{
+        type:String,
+        required:false
+    },
+    course_amount:{
+        type:String,
+        required:true
+    },
+    coupan:{
+        type:String,
+        required:false
+    },
     payment_status:{
         type:String
     },

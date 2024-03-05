@@ -10,48 +10,39 @@
   <h1>Live Conference</h1>
   <video id="localVideo" autoplay muted playsinline></video>
   <div id="remoteVideos"></div>
-
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/simple-peer@16/dist/simplepeer.min.js"></script>
   <script src="conference.js"></script>
 </body>
 </html>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
   const socket = io();
   const localVideo = document.getElementById('localVideo');
   const remoteVideos = document.getElementById('remoteVideos');
-
   navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .then((stream) => {
       localVideo.srcObject = stream;
-
       const peers = {};
-
       // Handle joining a room
       socket.emit('join-room', 'example-room');
-
       // Handle user-connected event
       socket.on('user-connected', (userId) => {
         console.log(`User connected: ${userId}`);
         const peer = new SimplePeer({ initiator: true, stream });
         peers[userId] = peer;
-
         peer.on('signal', (data) => {
-          // Send signaling data to the server
+          // where i emit the code so i get the data signal:data,userId and find some room dd/mm/yyyy
           socket.emit('signal', { signal: data, userId });
         });
-
         peer.on('stream', (remoteStream) => {
-          // Create a new video element for each remote stream
           const remoteVideo = document.createElement('video');
           remoteVideo.srcObject = remoteStream;
           remoteVideo.autoplay = true;
           remoteVideos.appendChild(remoteVideo);
         });
       });
-
-      // Handle user-disconnected event
+      // Handle user-disconnected event who caling 
       socket.on('user-disconnected', (userId) => {
         console.log(`User disconnected: ${userId}`);
         const peer = peers[userId];
@@ -59,19 +50,16 @@
           peer.destroy();
           delete peers[userId];
         }
-      });
-
-      // Handle signaling data
+      });  // Handle signaling data
       socket.on('signal', (data) => {
         const peer = peers[data.userId];
         if (peer) {
           peer.signal(data.signal);
         }
       });
-    })
+      })
     .catch((error) => {
       console.error('Error accessing media devices:', error);
     });
 });
-
 </script>

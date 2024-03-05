@@ -101,95 +101,6 @@
                         <div class="col-md-12">
                             <div class="form-group" >
                                <label>Chapter Name<span class="required_">*</span></label>
-                               <input type="text" class="form-control" name="chapter_name" id="inputName" placeholder="Enter Chapter Name" required>
-                            </div>
-                         </div>
-                         <div class="col-md-12">
-                            <div class="form-group" >
-                               <label>Discription<span class="required_">*</span></label>
-                               <textarea type="text" class="form-control" name="chapterDscription" id="inputName" placeholder="Enter Discription Name" required></textarea>
-                            </div>
-                         </div>
-                         <div class="col-md-6">
-                            <div class="form-group" >
-                               <label>Upload Notes (related to Lession)<span class="required_"> </span></label>
-                               <input type="file" class="form-control" name="notes" id="inputName" multiple  >
-                            </div>
-                         </div>
-                         <div class="col-md-6">
-                            <div class="form-group" >
-                               <label>select Mode<span class="required_">*</span></label>
-                               <select class="form-control" onchange="uploadVideo(this.value,'unique_0')" name="mode" id="" style="height: 47px;" required>
-                                <option value="">-select mode-</option> 
-                                <option value="live">live</option>
-                                <option value="upload">upload</option>
-                                </select>
-                            </div>
-                         </div>
-
-                         <div class="col-md-12">
-                           <div class="form-group" >
-                              <label> Url<span class="required_"> *</span></label>
-                              <input type="text" class="form-control" name="url" id="inputName" multiple  required>
-                           </div>
-                        </div>
-
-                         <div class="col-md-12" id="unique_0"></div>
-                         <div class="col-md-4">
-                            <div class="form-group" >
-                               <label>Lession Thumbnail<span class="required_">*</span></label>
-                               <input type="file" class="form-control" name="lessionThumbnail" id="inputName" multiple required>
-                            </div>
-                         </div>
-                         <div class="col-md-4">
-                            <div class="form-group" >
-                               <label>Start Date & time<span class="required_">*</span></label>
-                               <input type="datetime-local" class="form-control" name="lesstionStartDate" id="inputName" required>
-                            </div>
-                         </div>
-                         <div class="col-md-4">
-                            <div class="form-group" >
-                               <label>End Date & time<span class="required_">*</span></label>
-                               <input type="datetime-local" class="form-control" name="lessionEndDate" id="inputName" required>
-                            </div>
-                           </div>
-                           
-                           <!-- <div style="text-align: end;"> <button type="button" onclick="appendData()" class="btn btn-success">Add More +</button></div> -->
-                          </div>
-                          <br>
-                          </div>
-
-                          
-                        </div>
-                        <div class="golu"></div>
-                        <br><button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                 </div>
-                  </div>
-                  </div>
-                  </div>
-        
-        
-        
-        
-<!-- /////////// -->
-
-
-   <script>
-    let delete_num = 1;
-    function appendData(){
-      
-        let count = delete_num+1;
-        var html = `<br> <div class="card  box-shadow-0" id="delete_${delete_num}">
-                <div class="card-header d-flex justify-content-between" style="padding-top:15px">
-                   <h4 class="card-title mb-1">Lession </h4>
-                  </div>   
-                  <div class="card-body pt-0">
-                      <br>
-                      <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group" >
-                               <label>Chapter Name<span class="required_">*</span></label>
                                <input type="text" class="form-control" name="chapter_name[]" id="inputName" placeholder="Enter Chapter Name" required>
                             </div>
                          </div>
@@ -242,29 +153,124 @@
                                <input type="datetime-local" class="form-control" name="lessionEndDate[]" id="inputName" required>
                             </div>
                            </div>
-                            <div style="text-align: end;"> <button type="button" onclick="appendData()" class="btn btn-success">Add More +</button> <button type="button"  onclick="delete_('delete_${delete_num}')" class="btn btn-danger">Remove -</button></div>
-                          </div>`;
+                           
+                           <div style="text-align: end;"> <button type="button" onclick="appendData()" class="btn btn-success">Add More +</button></div>
+                          </div>
+                          <br>
+                          </div>
 
-    $('.golu').append(html);
+                          
+                        </div>
+                        <div class="golu"></div>
+                        <br><button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                 </div>
+                  </div>
+                  </div>
+                  </div>
+        
+        
+        
+        
+<!-- /////////// -->
 
-    delete_num++;
-    }
 
-    function delete_(id){
-       $('#'+id).remove();
-    }
-    function uploadVideo(value,id){
-        if(value == 'upload'){
-            $('#'+id).html(`
-                            <div class="form-group" >
-                               <label>Upload Video<span class="required_">*</span></label>
-                               <input type="file" class="form-control" name="lession_video[]" id="inputName" required>
-                            </div>
-                         `);
-        }else{
-            $('#'+id).html(``);
-        }
-    }
-   </script>
+<script>
+   let delete_num = 1;
+   function appendData(){
+       let id = $('#playListId').val();
+       let count = delete_num+1;
+        var html = `</br>
+   <div class="card  box-shadow-0" id="delete_${delete_num}">
+       <div class="card-header d-flex justify-content-between" style="padding-top:15px">
+           <h4 class="card-title mb-1">Lession</h4>
+       </div>
+       <div class="card-body pt-0">
+           <div class="row">
+               <div class="col-md-12">
+                   <div form-group">
+                       <label>Chapter Name<span class="required_">*</span></label>
+                       <input type="text" class="form-control" name="chapter_name[]" id="inputName" placeholder="Enter Chapter Name" required>
+                   </div>
+               </div>
+               <input type="hidden" value="${id}" name="playlist_id">
+               <div class="col-md-12">
+                   <div form-group>
+                       <label>Discription<span class="required_">*</span></label>
+                       <textarea type="text" class="form-control" name="chapterDscription[]" id="inputName" placeholder="Enter Discription Name" required></textarea>
+                   </div>
+               </div>
+               <div class="col-md-6">
+                   <div form-group>
+                       <label>Upload Notes (related to Lession)</label>
+                       <input type="file" class="form-control" name="notes[]" id="inputName"  >
+                   </div>
+               </div>
+               <div class="col-md-6">
+                   <div form-group>
+                       <label>Select Mode<span class="required_">*</span></label>
+                       <select class="form-control" onchange="uploadVideo(this.value,'unique_${delete_num}')" name="mode[]" id="" style="height: 47px;" required>
+                           <option value="">-select mode-</option>
+                           <option value="live">live</option>
+                           <option value="upload">upload</option>
+                       </select>
+                   </div>
+               </div>
+               <div class="col-md-12">
+                   <div form-group>
+                       <label> Url<span class="required_"> *</span></label>
+                       <input type="text" class="form-control" value="" name="url[]" id="inputName"  required>
+                   </div>
+               </div>
+               <div class="col-md-12" id="unique_${delete_num}"></div>
+               <div class="col-md-4">
+                   <div form-group>
+                       <label>Lession Thumbnail<span class="required_">*</span></label>
+                       <input type="file" class="form-control" name="lessionThumbnail[]" id="inputName" />
+                   </div>
+               </div>
+               <div class="col-md-4">
+                   <div form-group>
+                       <label>Start Date & time<span class="required_">*</span></label>
+                       <input type="datetime-local" class="form-control" name="lesstionStartDate[]" id="inputName">
+                   </div>
+               </div>
+               <div class="col-md-4">
+                   <div form-group>
+                       <label>End Date & time<span class="required_">*</span></label>
+                       <input type="datetime-local" class="form-control" name="lessionEndDate[]" id="inputName">
+                   </div>
+               </div>
+           </div>
+           <div style="text-align: end;">
+               <button type="button" onclick="appendData()" class="btn btn-success">Add More +</button>
+               <button type="button" onclick="delete_('delete_${delete_num}')" class="btn btn-danger">Remove -</button>
+           </div>
+       </div>
+   </div>
+
+`;
+
+   $('.golu').append(html);
+
+   delete_num++;
+   }
+
+   function delete_(id){
+      $('#'+id).remove();
+   }
+   function uploadVideo(value,id){
+       if(value == 'upload'){
+           $('#'+id).html(`
+                           <div class="form-group" >
+                              <label>Upload Video<span class="required_">*</span></label>
+                              <input type="file" class="form-control" name="lession_video[]" id="inputName" required>
+                           </div>
+                        `);
+       }else{
+           $('#'+id).html(``);
+       }
+   }
+  </script>
 
 <%- include ('../layout/footer.ejs') %>

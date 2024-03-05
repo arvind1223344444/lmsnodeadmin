@@ -7,15 +7,16 @@
 <!-- <% if(typeof error != 'undefined'){ %>
    <div style="text-align: center;"><p><%= error %></p></div>
    <% } %> -->
-  
+   <form action="/chapter/edit_chapter_submit" method="post" enctype="multipart/form-data">
 <div class="row justify-content-center" style="margin:20px">
 <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12"> 
   
-   
+ 
     <div class="card  box-shadow-0">
       <div class="card-header d-flex justify-content-between" style="padding-top:15px">
          <h4 class="card-title mb-1">Add PlayLIst Details</h4>
          <a href="/chapter/show_chapter" class="btn btn-primary">Back</a></div>   
+       
         <div class="card-body pt-0" >
             <br>
             <div class="row">
@@ -87,11 +88,11 @@
                   </div>
                 </div>
               </div>
-              <input type="hidden" id="playListId" value="<%= playlist._id %>" name="playlist_id"/>
+              <input type="hidden" id="playListId" value="<%= playlist._id %>" name="playListId"/>
 <!-- ///////////////////////////// -->
 <% playlist.chapters.forEach((chapter)=>{%>
               <br>
-              <input type="hidden" value="<%= chapter._id%>" name="chapter_id[]">
+              <input type="text" value="<%= chapter._id%>" name="chapter_id[]">
               <div class="card  box-shadow-0">
                 <div class="card-header d-flex justify-content-between" style="padding-top:15px">
                    <h4 class="card-title mb-1">Lession</h4>
@@ -188,13 +189,14 @@
                         <%  }) %>
                         <div class="golu"></div>
                         <br><button type="submit" class="btn btn-primary">Submit</button>
-               
+         
                  </div>
                   </div>
+           
                   </div>
                   </div>
-        
-        
+               </form>
+           
         
         
 <!-- /////////// -->
@@ -205,7 +207,7 @@
     function appendData(){
         let id = $('#playListId').val();
         let count = delete_num+1;
-         var html = `</br><form action="http://localhost:3000/chapter/inserted" method="post" enctype="multipart/form-data">
+         var html = `</br>
     <div class="card  box-shadow-0" id="delete_${delete_num}">
         <div class="card-header d-flex justify-content-between" style="padding-top:15px">
             <h4 class="card-title mb-1">Lession</h4>
@@ -215,26 +217,26 @@
                 <div class="col-md-12">
                     <div form-group">
                         <label>Chapter Name<span class="required_">*</span></label>
-                        <input type="text" class="form-control" name="chapter_name" id="inputName" placeholder="Enter Chapter Name" required>
+                        <input type="text" class="form-control" name="achapter_name[]" id="inputName" placeholder="Enter Chapter Name" required>
                     </div>
                 </div>
                 <input type="hidden" value="${id}" name="playlist_id">
                 <div class="col-md-12">
                     <div form-group>
                         <label>Discription<span class="required_">*</span></label>
-                        <textarea type="text" class="form-control" name="chapterDscription" id="inputName" placeholder="Enter Discription Name" required></textarea>
+                        <textarea type="text" class="form-control" name="achapterDscription[]" id="inputName" placeholder="Enter Discription Name" required></textarea>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div form-group>
                         <label>Upload Notes (related to Lession)</label>
-                        <input type="file" class="form-control" name="notes" id="inputName"  >
+                        <input type="file" class="form-control" name="anotes[]" id="inputName"  >
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div form-group>
                         <label>Select Mode<span class="required_">*</span></label>
-                        <select class="form-control" onchange="uploadVideo(this.value,'unique_${delete_num}')" name="mode" id="" style="height: 47px;" required>
+                        <select class="form-control" onchange="uploadVideo(this.value,'unique_${delete_num}')" name="amode[]" id="" style="height: 47px;" required>
                             <option value="">-select mode-</option>
                             <option value="live">live</option>
                             <option value="upload">upload</option>
@@ -244,36 +246,36 @@
                 <div class="col-md-12">
                     <div form-group>
                         <label> Url<span class="required_"> *</span></label>
-                        <input type="text" class="form-control" value="" name="url" id="inputName"  required>
+                        <input type="text" class="form-control" value="" name="aurl[]" id="inputName"  required>
                     </div>
                 </div>
                 <div class="col-md-12" id="unique_${delete_num}"></div>
                 <div class="col-md-4">
                     <div form-group>
                         <label>Lession Thumbnail<span class="required_">*</span></label>
-                        <input type="file" class="form-control" name="lessionThumbnail" id="inputName" />
+                        <input type="file" class="form-control" name="alessionThumbnail[]" id="inputName" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div form-group>
                         <label>Start Date & time<span class="required_">*</span></label>
-                        <input type="datetime-local" class="form-control" name="lesstionStartDate" id="inputName">
+                        <input type="datetime-local" class="form-control" name="alesstionStartDate[]" id="inputName">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div form-group>
                         <label>End Date & time<span class="required_">*</span></label>
-                        <input type="datetime-local" class="form-control" name="lessionEndDate" id="inputName">
+                        <input type="datetime-local" class="form-control" name="alessionEndDate[]" id="inputName">
                     </div>
                 </div>
             </div>
             <div style="text-align: end;">
-                <button type="submit" class="btn btn-success">Add More +</button>
+                <button type="button" class="btn btn-success">Add More +</button>
                 <button type="button" onclick="delete_('delete_${delete_num}')" class="btn btn-danger">Remove -</button>
             </div>
         </div>
     </div>
-</form>
+
 `;
 
     $('.golu').append(html);
@@ -289,7 +291,7 @@
             $('#'+id).html(`
                             <div class="form-group" >
                                <label>Upload Video<span class="required_">*</span></label>
-                               <input type="file" class="form-control" name="lession_video[]" id="inputName" required>
+                               <input type="file" class="form-control" name="lession_video[]" id="inputName" >
                             </div>
                          `);
         }else{

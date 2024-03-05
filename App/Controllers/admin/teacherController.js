@@ -42,7 +42,7 @@ console.log(req)
 teacterModel.create({
     user_id:req.session.user._id,
     name:name,
-    image:typeof req.file !== 'undefined' && req.file !== null ? req.file.path :'',
+    image:typeof req.file !== 'undefined' && req.file !== null ? req.file.path.replace('public', '') :'',
     mobile:mobile,
     email:email,
     password:password,
@@ -95,7 +95,7 @@ app.post('/edit_teacher/:id',rolePermission('editTeacher'),imageUpload.single('i
         imageUpload = imageUnlink;
    }else{
     
-        imageUpload = req.file.path;
+        imageUpload = req.file.path.replace('public', '');
    }
    
     teacterModel.updateOne({_id:id},{

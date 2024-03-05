@@ -18,7 +18,7 @@ app.post('/addcourse',rolePermission('addCourse'),imgUploadImddleware.single('co
     const {courseName,desc} = req.body;
     courseModel({
         courseName: courseName,
-        courseImage: typeof req.file !== 'undefined' && req.file !== null ?  req.file.path :'',
+      courseImage: typeof req.file !== 'undefined' && req.file !== null ? req.file.path.replace('public', '') : '',
         desc:desc
     }).save().then((data)=>{
         res.redirect('/course/show_course');
@@ -58,7 +58,7 @@ app.post('/edit_course/:id',rolePermission('editCourse'),imgUploadImddleware.sin
     if(typeof req.file == 'undefined' && req.file == null  ){
          imageUpload = imageUnlink;
     }else{
-         imageUpload = req.file.path;
+         imageUpload = req.file.path.replace('public','');
     }
   
 

@@ -19,7 +19,7 @@ app.post('/addlevel',rolePermission('addLevel'),imgUploadImddleware.single('Leve
     const {levelName } = req.body;
     levelModel({
         levelName: levelName,
-        levelImage: typeof req.file !== 'undefined' && req.file !== null ?  req.file.path :'',
+        levelImage: typeof req.file !== 'undefined' && req.file !== null ?  req.file.path.replace('public','') :'',
     
     }).save().then((data)=>{
         res.redirect('/level/show_level');
@@ -55,7 +55,7 @@ app.post('/edit_level/:id',rolePermission('editLevel'),imgUploadImddleware.singl
     if(typeof req.file == 'undefined' && req.file == null  ){
          imageUpload = imageUnlink;
     }else{
-         imageUpload = req.file.path;
+         imageUpload = req.file.path.replace('public','');
     }
 
 

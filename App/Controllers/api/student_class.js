@@ -56,6 +56,19 @@ app.get('/get_every_stundet_classwork/:id',multer().none(),async(req,res)=>{
     const data = student1.map(doc => doc.toObject());
     res.status(200).send({response: data});
 })
+app.get('/get_every_stundet_classwork_oral/:id',multer().none(),async(req,res)=>{
+    const { id } = req.params;
+    // const student1 = await student.findOne({_id:id}).populate({path: 'assign_course', populate:{ path: 'chapters', populate:{ path:'assignment', match:{ type:'home_work' } } }});
+
+    const student1= await assign.find({ student_id: id}).populate({ path:'assignment_id', match:{type:'class_work_oral'}, populate:[{path:'chapter_id'}, {path:'get_assignment_status'} ] });
+    const data = student1.map(doc => doc.toObject());
+    res.status(200).send({response: data});
+})
+
+
+
+
+
 
 app.get('/get_every_stundet_orlas/:id',multer().none(),async(req,res)=>{
     const { id } = req.params;

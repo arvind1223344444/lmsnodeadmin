@@ -395,7 +395,13 @@ const localendd_Date = new Date(lessionEndDate[i]);
         // Now you can do whatever you want with the playlist data
 
         // Send response if needed
-        res.send('Form submitted successfully');
+       //res.send('Form submitted successfully');
+       res.send(`
+       <script>
+           alert('Form submitted successfully');
+           window.location="/chapter/show_chapter";
+       </script>
+   `);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Internal Server Error');

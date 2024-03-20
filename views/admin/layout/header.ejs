@@ -46,7 +46,7 @@
 
     </style>
  <!-- <% path='https://node-project-rc3o.onrender.com/' %> -->
- <% path='https://lmsnodeadmin.onrender.com/' %>
+ <% path='http://localhost:3000/' %>
 
 
 <!-- Mirrored from www.bootstrapdash.com/demo/celestial-free/template/pages/charts/chartjs.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 22 Oct 2022 06:01:15 GMT -->
@@ -487,21 +487,29 @@
             </a>
             <div class="collapse" id="slider">
               <ul class="nav flex-column sub-menu">
+                <li class="nav-item"><a class="nav-link" href="/course/addcourse">Create Courses</a></li>
+    
                 <% if(inArray(locals.usersession.roles_id.permission,'viewCourse')){ %>
-                <li class="nav-item"><a class="nav-link" href="/course/show_course">Courses</a></li>
+                <li class="nav-item"><a class="nav-link" href="/course/show_course">View Courses</a></li>
                 <% } %>
+                        
+                <li class="nav-item"><a class="nav-link" href="/level/addlevel">Add Level</a></li>
+                
+                <% if(inArray(locals.usersession.roles_id.permission,'viewLevel')){ %>
+                  <li class="nav-item"><a class="nav-link" href="/level/show_level">View Levels</a></li>
+                  <% } %>
 
+                  <li class="nav-item"><a class="nav-link" href="/chapter/addchapter">Add Chapter</a></li>
+                  <% if(inArray(locals.usersession.roles_id.permission,'viewChapter')){ %>
+                    <li class="nav-item"><a class="nav-link" href="/chapter/show_chapter">View Chapters</a></li>
+                    <% } %>
                 <li class="nav-item"><a class="nav-link" href="/payment/show_payment">Course fee</a></li>
 
                 <li class="nav-item"><a class="nav-link" href="/payment/coupons">Coupons</a></li>
 
 
-                <% if(inArray(locals.usersession.roles_id.permission,'viewLevel')){ %>
-                <li class="nav-item"><a class="nav-link" href="/level/show_level">Levels</a></li>
-                <% } %>
-                <% if(inArray(locals.usersession.roles_id.permission,'viewChapter')){ %>
-                <li class="nav-item"><a class="nav-link" href="/chapter/show_chapter">Chapters</a></li>
-                <% } %>
+              
+                
               </ul>
             </div>
           </li>
@@ -513,15 +521,19 @@
 
           <% if(inArray(locals.usersession.roles_id.permission,'viewCourse')  || inArray(locals.usersession.roles_id.permission,'viewLevel') || inArray(locals.usersession.roles_id.permission,'viewChapter')){ %>
             <li class="nav-item">
-              <a class="nav-link" data-toggle="collapse" href="#slider" aria-expanded="false" aria-controls="slider">
+              <a class="nav-link" data-toggle="collapse" href="#slider33" aria-expanded="false" aria-controls="slider">
                 <i class="typcn typcn-film menu-icon"></i>
                 <span class="menu-title">Assignment & Work </span>
                 <i class="menu-arrow"></i>
               </a>
-              <div class="collapse" id="slider">
+              <div class="collapse" id="slider33">
                 <ul class="nav flex-column sub-menu">
                   <% if(inArray(locals.usersession.roles_id.permission,'viewCourse')){ %>
                   <li class="nav-item"><a class="nav-link" href="/assignments/show_assignment">Assignment</a></li>
+                  <li class="nav-item"><a class="nav-link" href="/assignments/show_assign_assignment">Student Assignment</a></li>
+                
+                
+                
                   <% } %>
   
                   <!-- <li class="nav-item"><a class="nav-link" href="/payment/show_payment">Course fee</a></li>
@@ -581,12 +593,51 @@
             </a>
             <div class="collapse" id="student">
               <ul class="nav flex-column sub-menu">
+                
                 <li class="nav-item"><a class="nav-link" href="/student/show_student">Student</a></li>
+                <li class="nav-item"><a class="nav-link" href="/student/show_student_attendance">Student Attendance</a></li>
                 
               </ul>
             </div>
           </li>
           <% } %>
+
+
+
+
+          <% if(inArray(locals.usersession.roles_id.permission,'viewStudent')){ %>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="collapse" href="#payment" aria-expanded="false" aria-controls="student">
+                <i class="typcn typcn-film menu-icon"></i>
+                <span class="menu-title">Payments</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="payment">
+                <ul class="nav flex-column sub-menu">
+                  
+                  <li class="nav-item"><a class="nav-link" href="/student/checkpayment">Check Payments</a></li>
+                  
+                </ul>
+              </div>
+            </li>
+            <% } %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
 
           <% if(inArray(locals.usersession.roles_id.permission,'viewContact')){ %>
           <li class="nav-item">

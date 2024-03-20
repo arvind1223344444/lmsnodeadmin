@@ -4,7 +4,7 @@ const app = express.Router();
 const teacherModel =  require(__dirname+'./../../Models/TeacherModel');
 const playModel =  require(__dirname+'./../../Models/playList');
 const chapter_view =  require(__dirname+'./../../Models/chapter');
-
+const Agoramodel = require(__dirname+'./../../Models/AgoraModel');
 
 const student_attendance = require(__dirname+'./../../Models/student_attendance');
 
@@ -37,6 +37,145 @@ app.post('/login', multer().none() , async (req, res) => {
       res.status(500).json({ response: 'Internal Server Error' });
     }
  });
+
+
+ app.post('/add_agora', multer().none(), async (req, res) => {
+  try {
+    const { class_id, teacher_id, app_id, secret_key, agora_class_name } = req.body;
+
+    // Check if the entry already exists
+    const existingAgora = await Agoramodel.findOne({
+      class_id: class_id
+    });
+
+    if (existingAgora) {
+      
+      const updatedAgora = await Agoramodel.findOneAndUpdate(
+        { class_id: class_id },
+        {
+          teacher_id: teacher_id,
+          app_id: app_id,
+          secret_key: secret_key,
+          agora_class_name: agora_class_name
+        },
+        { new: true }
+      );
+  
+      if (updatedAgora) {
+        res.status(200).json({ response: 'Agora updated successfully', updatedAgora });
+      } 
+      
+      
+      
+      // If the entry already exists, send a response
+    //  res.status(200).json({ response: 'This entry already exists' });
+    } else {
+
+
+
+
+
+
+      // If the entry does not exist, create a new one
+      const add_agora = await Agoramodel.create({
+        class_id: class_id,
+        teacher_id: teacher_id,
+        app_id: app_id,
+        secret_key: secret_key,
+        agora_class_name: agora_class_name
+      });
+      
+      if (add_agora) {
+        res.status(200).json({ response: 'Agora created successfully' });
+      } else {
+        res.status(500).json({ response: 'Error' });
+      }
+    }
+  } catch (err) {
+    res.status(500).json({ response: 'Internal Server Error' });
+  }
+});
+
+
+
+app.get('/get_agora_details/:class_id', async(req , res)=>{
+
+  const { class_id} = req.params;
+
+  Agoramodel.findOne({ class_id: class_id }).then((data)=>{
+    const response =  data.toObject();
+   res.status(200).json({ response: response })
+   }).catch((err)=>{
+   console.log(err.message)
+   })
+
+})
+
+
+app.get('/get_agora_details_update_fetch/:id', async(req , res)=>{
+
+  const { id} = req.params;
+
+  Agoramodel.findOne({ _id:id }).then((data)=>{
+    const response =  data.toObject();
+   res.status(200).json({ response: response })
+   }).catch((err)=>{
+   console.log(err.message)
+   })
+
+})
+
+
+
+app.post('/agora_update', multer().none(), async (req, res) => {
+  try {
+    const { class_id, teacher_id, app_id, secret_key, agora_class_name } = req.body;
+
+    // Find and update one document based on class_id
+    const updatedAgora = await Agoramodel.findOneAndUpdate(
+      { class_id: class_id },
+      {
+        teacher_id: teacher_id,
+        app_id: app_id,
+        secret_key: secret_key,
+        agora_class_name: agora_class_name
+      },
+      { new: true }
+    );
+
+    if (updatedAgora) {
+      res.status(200).json({ response: 'Agora updated successfully', updatedAgora });
+    } else {
+      res.status(404).json({ response: 'No Agora found with the provided class_id' });
+    }
+  } catch (err) {
+    res.status(500).json({ response: 'Internal Server Error' });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  app.get('/get_teacher_details/:teacher_id' ,async(req,res)=>{
      const { teacher_id } = req.params; 

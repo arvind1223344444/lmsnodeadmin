@@ -6,7 +6,7 @@
               <div class="card">
                 <div class="card-body">
                 <div class="d-flex justify-content-between">
-                  <h4 class="card-title"></h4>
+                  <h4 class="card-title">Check Payments</h4>
                  
                </div>
                   <p class="card-description">
@@ -19,49 +19,54 @@
                           <th>
                             Sno
                           </th>
+                          <th>Date</th>
                           <th>
-                            Name
+                            Student Name
                           </th>
                           
                           <th>
-                            Mobile
+                            Student Mobile
                           </th>
                           <th>
-                            Email
+                           Student Email
                           </th>
                           <th>
-                            Assign Course
+                           Course name
                           </th>
-                          <th>Status</th>
-                          <th>
-                            Action
-                          </th>
+                          <th>Course fee</th>
+                          <th>Course paid fee</th>
+                          <th>Coupan code applied</th>
+                          <th>Transaction Id</th>
+                          <th>Payment status</th>
+                         
+                        
                         </tr>
                       </thead>
 
-<%
+                   
+                        <%
 let sno = 1;
-data.forEach(function(mydata){ 
+data.forEach(function(data){ 
   
 %>
-                    <tr>
+<tr>
+  <td><%= sno++%></td>
+  <td><%= data.addedOn%></td>
 
-                        <td><%= sno++ %></td>
-                        <td><%= mydata.name %></td>
-                        <td><%= mydata.mobile %></td>
-                        <td><%= mydata.email %></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+  <td><%= data.studentName %></td>
+  <td><%= data.studentMobile %></td>
+  <td><%= data.studentemail  %></td>
+  <td><%= data.playlist_name %></td>
+  <td><%= data.course_amount%></td>
+  <td><%= data.amount%></td>
+  <td><%= data.coupan %></td>
+  <td><%= data.transcation_id %></td>
+  <td><%= data.payment_status %></td>
+
+</tr>
+<% })%>
 
 
-                    </tr>
-
-                    <%
-                })
-                    %>
                     </table>
                   </div>
                 </div>

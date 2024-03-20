@@ -2,6 +2,9 @@ const express = require('express');
 const app = express.Router();
 const assignmentModel = require(__dirname+'/../../Models/assignment');
 const assign_question_Model = require(__dirname+'/../../Models/assignment_question');
+
+const assign_assignment = require(__dirname+'/../../Models/assignment_assign');
+const student_model = require(__dirname+'/../../Models/StudentModel');
 const playModel = require(__dirname+'/../../Models/chapter');
 const inArray = require('in-array'); 
 const multer = require('multer');
@@ -15,6 +18,82 @@ app.get('/show_assignment',async(req,res)=>{
     }).catch((err)=>{
        res.send(err)
     })
+})
+
+
+app.get('/show_assign_assignment',async(req, res)=>{
+
+try{
+
+  const data = await  assign_assignment.find();
+
+
+  for(const record2 of data)
+  {
+    const chapter_data = await playModel.findOne({_id:record2.chapter_id});
+
+    if(chapter_data)
+    {
+      record2.chapter_name =chapter_data.chapter_name;
+    }
+    else
+    record2.chapter_name = "Unknown";
+
+
+  }
+  
+
+  for(const record of data)
+  {
+const student = await student_model.findOne({_id:record.student_id});
+if (student) {
+  record.studentName = student.name; 
+  record.studentMobile=student.mobile;
+  record.studentemail = student.email;
+  record.student_id = student._id;
+
+} 
+else
+ {
+  record.studentName = 'Unknown'; // Handle case where student is not found
+}
+  }
+
+
+  const assignmentNames = [];
+
+  (async () => {
+    const assignmentData = []; // Define an array to hold assignment data along with student_id
+    for (const record of data) {
+      const assignmentNamesForRecord = [];
+      for (const assignmnt_id of record.assignment_id) {
+        try {
+          const assignmentdata = await assignmentModel.findOne({ _id: assignmnt_id });
+          if (assignmentdata) {
+            assignmentNamesForRecord.push(assignmentdata.name);
+            console.log(assignmentdata.name);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      assignmentData.push({ student_id: record.student_id, assignmentNames: assignmentNamesForRecord });
+    }
+  
+    // Log the assignmentData array
+    console.log("my data ", assignmentData);
+  
+    // Assuming this code snippet is outside the IIFE, you can use assignmentData here
+    res.render('admin/assignmnt/show_assign_assignment', { data: data, data1: assignmentData, inArray: inArray });
+  })();
+  
+  
+}
+catch(error){
+
+  
+}
+
 })
 
 app.get('/create',async(req,res)=>{

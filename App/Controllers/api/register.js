@@ -197,6 +197,6 @@ app.post('/user_auth_register',multer().none(),async(req,res)=>{
     
      res.status(200).json({status:true,response:'incorrect otp',success:0})
     }
-  }) 
+  })
 
 module.exports = app;

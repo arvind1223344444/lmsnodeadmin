@@ -6,7 +6,7 @@
               <div class="card">
                 <div class="card-body">
                 <div class="d-flex justify-content-between">
-                  <h4 class="card-title"></h4>
+                  <h4 class="card-title">Show student attendance</h4>
                  
                </div>
                   <p class="card-description">
@@ -32,29 +32,28 @@
                           <th>
                             Assign Course
                           </th>
-                          <th>Status</th>
-                          <th>
-                            Action
-                          </th>
+                          <th>In time</th>
+                          <th>Out time</th>
+                        
                         </tr>
                       </thead>
 
 <%
 let sno = 1;
-data.forEach(function(mydata){ 
+data.forEach(function(data){ 
   
 %>
                     <tr>
 
                         <td><%= sno++ %></td>
-                        <td><%= mydata.name %></td>
-                        <td><%= mydata.mobile %></td>
-                        <td><%= mydata.email %></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                       
+                        <td><%= data.studentName %> </td>
+                        <td><%= data.studentMobile %></td>
+                        <td><%= data.studentemail%></td>
+                        <td><%= data.course_name %></td>
+                        <td><%= data.in_time %></td>
+                        <td><%= data.out_time %></td>
+                          
 
 
                     </tr>

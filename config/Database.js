@@ -15,4 +15,3 @@ mongoose.connect('mongodb+srv://webdeveloper1:IK9ez3LQ91YwQU7F@cluster0.6qnw3vh.
 });
 
 module.exports = mongoose;
- 
